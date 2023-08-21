@@ -17,7 +17,7 @@ fi
 # 3. Installation de Portainer Business Edition
 echo "Installation de Portainer Business Edition..."
 sudo docker pull portainer/business
-sudo docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock -e "PORTAINER_LICENSE=$PORTAINER_LICENSE" portainer/business
+sudo docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock
 
 # 4. Installation de Nginx Proxy Manager
 echo "Installation de Nginx Proxy Manager..."
