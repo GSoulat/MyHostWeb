@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  # Service de base de données MariaDB pour NPM
+  db:
+    image: mariadb:latest
+    container_name: nginx-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm_root_password'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'npm'
+    volumes:
+      - ./nginx-db:/var/lib/mysql
+    networks:
+      - myhost_network
+
+  # Service Nginx Proxy Manager
+  nginx:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    environment:
+      DB_MYSQL_HOST: 'db'
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: 'npm'
+      DB_MYSQL_PASSWORD: 'npm'
+      DB_MYSQL_NAME: 'npm'
+    volumes:
+      - ./npm_data:/data
+      - ./npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - myhost_network
+    restart: always
+
+networks:
+  myhost_network:
+    external: true
