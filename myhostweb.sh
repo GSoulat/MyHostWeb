@@ -4,6 +4,17 @@ domain_name="$1"
 base_dir=$(dirname "$0")
 backup_path="$base_dir/../Backup"
 
+
+check_container_status() {
+    container_name="$1"
+    if docker ps | grep -q "$container_name"; then
+        echo "$container_name est démarré avec succès."
+    else
+        echo "Erreur: $container_name n'a pas démarré correctement!"
+        exit 1
+    fi
+}
+
 # Liste des sauvegardes disponibles
 backups=($(ls "$backup_path"/*.zip 2> /dev/null))
 
@@ -37,13 +48,14 @@ done
 
 # Démarrage de Portainer avec Docker Compose
 echo "Démarrage de Portainer avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/portainer-docker-compose.yml" up -d
-echo "Portainer démarré. Vous pouvez y accéder à l'adresse suivante : https://portainer.${domain_name}:9443"
+sudo docker-compose -f "$base_dir/Docker/portainer-docker-compose.yml" up -d --remove-orphans
+check_container_status "portainer" 
 
 # Démarrage de Nginx Proxy Manager avec Docker Compose
 echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
-echo "Nginx Proxy Manager démarré. Vous pouvez y accéder à l'adresse suivante : http://nginx.${domain_name}:81"
+sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d --remove-orphans
+check_container_status "nginx" 
+
 
 # Affichage du logo en bleu
 echo -e "\e[34m"
@@ -59,9 +71,6 @@ echo -e "\e[0m"
 
 # Récupération de l'IP de la machine
 ip_address=$(hostname -I | awk '{print $1}')
-
-# Affichage des containers et de leurs ports
-docker ps | awk 'NR>1 {print $NF " -> " $6}' | sed 's/0.0.0.0/localhost/'
 
 # Affichage des liens pour se connecter à nginx et portainer
 echo "Lien pour se connecter à nginx: http://${ip_address}:81"
