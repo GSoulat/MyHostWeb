@@ -2,7 +2,7 @@
 
 domain_name="$1"
 base_dir=$(dirname "$0")
-backup_dir="$base_dir/Backup"
+backup_dir="${base_dir}/../Backup"
 
 # Vérification et création du dossier de sauvegarde si nécessaire
 mkdir -p $backup_dir
