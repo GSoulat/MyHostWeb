@@ -48,12 +48,12 @@ done
 
 # Démarrage de Portainer avec Docker Compose
 echo "Démarrage de Portainer avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/portainer-docker-compose.yml" up -d --remove-orphans
+sudo docker-compose -f "$base_dir/Docker/portainer-docker-compose.yml" up -d
 check_container_status "portainer" 
 
 # Démarrage de Nginx Proxy Manager avec Docker Compose
 echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d --remove-orphans
+sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
 check_container_status "nginx" 
 
 
