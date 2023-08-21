@@ -17,7 +17,19 @@ echo "           |___/                                          "
 echo "Mise à jour d'Ubuntu..."
 sudo apt update && sudo apt upgrade -y
 
-# 2. Vérification de l'installation de Docker et Docker Compose
+# 2. Installation de Git
+if ! command -v git &> /dev/null; then
+    echo "Git n'est pas installé. Installation en cours..."
+    sudo apt install -y git
+else
+    echo "Git est déjà installé."
+fi
+
+# 3. Clonage du projet GitHub
+echo "Clonage du projet GitHub..."
+git clone https://github.com/GSoulat/MyHostWeb.git
+
+# 4. Vérification de l'installation de Docker et Docker Compose
 if ! command -v docker &> /dev/null; then
     echo "Docker n'est pas installé. Installation en cours..."
     sudo apt install -y docker.io
@@ -42,14 +54,6 @@ else
     echo "Le réseau Docker 'myhost_network' existe déjà."
 fi
 
-# 3. Démarrage de Portainer avec Docker Compose
-echo "Démarrage de Portainer avec Docker Compose..."
-sudo docker-compose -f Docker/portainer-docker-compose.yml up -d
-echo "Portainer démarré. Vous pouvez y accéder à l'adresse suivante : https://portainer.${domain_name}:9443"
-
-# 4. Démarrage de Nginx Proxy Manager avec Docker Compose
-echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
-sudo docker-compose -f Docker/nginx-db-docker-compose.yml up -d
-echo "Nginx Proxy Manager démarré. Vous pouvez y accéder à l'adresse suivante : http://nginx.${domain_name}:81"
-
-echo "Installation terminée."
+# 6. Exécution du script myhostweb.sh pour démarrer les services Docker Compose
+echo "Démarrage des services avec myhostweb.sh..."
+bash MyHostWeb/myhostweb.sh "$domain_name"
