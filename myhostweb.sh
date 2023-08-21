@@ -2,42 +2,37 @@
 
 domain_name="$1"
 base_dir=$(dirname "$0")
-backup_dir="${base_dir}/../Backup"
+backup_path="$base_dir/../Backup"
 
-# Vérification et création du dossier de sauvegarde si nécessaire
-mkdir -p $backup_dir
+# Liste des sauvegardes disponibles
+backups=($(ls "$backup_path"/*.zip 2> /dev/null))
 
-# Fonction pour sauvegarder les volumes des conteneurs
-backup_volumes() {
-    for container in $(sudo docker ps -q); do
-        container_name=$(sudo docker inspect --format='{{.Name}}' $container | sed 's/\///')
-        volume_paths=$(sudo docker inspect --format='{{ range .Mounts }}{{ if eq .Type "volume" }}{{ .Name }}:{{ .Destination }}{{ "\n" }}{{ end }}{{ end }}' $container)
-        
-        if [ ! -z "$volume_paths" ]; then
-            backup_file="$backup_dir/${container_name}_$(date +"%Y%m%d%H%M%S").zip"
-            echo "Sauvegarde des volumes pour $container_name..."
-            
-            # Utilisation de la commande 'docker cp' pour copier le contenu du volume vers un fichier zip
-            for volume in $volume_paths; do
-                IFS=':' read -r volume_name volume_dest <<< "$volume"
-                sudo docker cp $container:$volume_dest - | zip -j $backup_file -
-            done
-        fi
+if [ ${#backups[@]} -gt 0 ]; then
+    echo "Sauvegardes disponibles:"
+    for i in "${!backups[@]}"; do
+        echo "$((i+1))) ${backups[$i]}"
     done
-}
+    
+    read -p "Entrez le numéro de la sauvegarde que vous souhaitez restaurer ou appuyez sur Enter pour continuer: " backup_choice
+    if [[ $backup_choice =~ ^[0-9]+$ ]] && [ "$backup_choice" -ge 1 ] && [ "$backup_choice" -le ${#backups[@]} ]; then
+        selected_backup="${backups[$((backup_choice-1))]}"
+        echo "Restauration de la sauvegarde $selected_backup ..."
+        # Ici, vous pouvez ajouter le code pour restaurer la sauvegarde si nécessaire
+    fi
+else
+    echo "Aucune sauvegarde disponible."
+fi
 
 # Sauvegarde des volumes existants
-backup_volumes
-
-# Affichage des sauvegardes disponibles pour restauration
-echo "Sauvegardes disponibles:"
-select backup_file in $backup_dir/*.zip; do
-    if [ -f "$backup_file" ]; then
-        # Restauration des volumes à partir de la sauvegarde choisie
-        echo "Restauration à partir de $backup_file..."
-        # TODO: Ajouter le code de restauration ici
+docker_containers=( "portainer" "nginx" "nginx-db" )
+current_time=$(date +"%Y%m%d_%H%M%S")
+for container in "${docker_containers[@]}"; do
+    if docker ps -a | grep -q "$container"; then
+        volume_path=$(docker inspect "$container" | jq -r '.[0].Mounts[0].Source')
+        backup_filename="${container}_${current_time}.zip"
+        echo "Sauvegarde du volume pour $container..."
+        sudo zip -r "$backup_path/$backup_filename" "$volume_path"
     fi
-    break
 done
 
 # Démarrage de Portainer avec Docker Compose
@@ -48,5 +43,4 @@ echo "Portainer démarré. Vous pouvez y accéder à l'adresse suivante : https:
 # Démarrage de Nginx Proxy Manager avec Docker Compose
 echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
 sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
-echo "Nginx Proxy Manager démarré. Vous pouvez y accéder à l'adresse suivante : http://nginx.${domain_name}"
-
+echo "Nginx Proxy Manager démarré. Vous pouvez y accéder à l'adresse suivante : http://nginx.${domain_name}:81"
