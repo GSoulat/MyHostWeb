@@ -44,3 +44,25 @@ echo "Portainer démarré. Vous pouvez y accéder à l'adresse suivante : https:
 echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
 sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
 echo "Nginx Proxy Manager démarré. Vous pouvez y accéder à l'adresse suivante : http://nginx.${domain_name}:81"
+
+# Affichage du logo en bleu
+echo -e "\e[34m"
+echo "    __  __       _    _           ___          __  _      "  
+echo "   |  \/  |     | |  | |         | \ \        / / | |     "
+echo "   | \  / |_   _| |__| | ___  ___| |\ \  /\  / /__| |__   "
+echo "   | |\/| | | | |  __  |/ _ \/ __| __\ \/  \/ / _ \ '_ \  "
+echo "   | |  | | |_| | |  | | (_) \__ \ |_ \  /\  /  __/ |_) | "
+echo "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "
+echo "            __/ |                                         "
+echo "           |___/                                          "
+echo -e "\e[0m"
+
+# Récupération de l'IP de la machine
+ip_address=$(hostname -I | awk '{print $1}')
+
+# Affichage des containers et de leurs ports
+docker ps | awk 'NR>1 {print $NF " -> " $6}' | sed 's/0.0.0.0/localhost/'
+
+# Affichage des liens pour se connecter à nginx et portainer
+echo "Lien pour se connecter à nginx: http://${ip_address}:81"
+echo "Lien pour se connecter à portainer: https://${ip_address}:9443"
