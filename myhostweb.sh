@@ -4,6 +4,28 @@ domain_name="$1"
 base_dir=$(dirname "$0")
 backup_path="$base_dir/../Backup"
 
+clear
+
+TIME=2
+RED=1
+GREEN=10
+ORANGE=3
+
+gum style \
+	--foreground 2 --border-foreground 11 --border double \
+	--margin "1 2" --padding "2 4" \
+	"    __  __       _    _           ___          __  _      "  \
+    "   |  \/  |     | |  | |         | \ \        / / | |     "  \
+    "   | \  / |_   _| |__| | ___  ___| |\ \  /\  / /__| |__   "  \
+    "   | |\/| | | | |  __  |/ _ \/ __| __\ \/  \/ / _ \ '_ \  "  \
+    "   | |  | | |_| | |  | | (_) \__ \ |_ \  /\  /  __/ |_) | "  \
+    "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "  \
+    "            __/ |                                         "  \
+    "           |___/                                          "  \
+
+
+gum style --foreground 4 "Etape 2 : Démarrage des containers"
+
 
 check_container_status() {
     container_name="$1"

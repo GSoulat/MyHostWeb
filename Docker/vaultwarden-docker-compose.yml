@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  server:
+    restart: always
+    container_name: vaultwarden
+    volumes:
+      - 'myhostweb_data/vaultwarden/data:/data/'
+    ports:
+      - '8000:80'
+    image: vaultwarden/server:latest
+    networks:
+      - myhost_network
+      
+volumes:
+  myhostweb_data:
+
+networks:
+  myhost_network:
+    external: true
