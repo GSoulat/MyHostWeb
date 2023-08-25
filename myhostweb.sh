@@ -31,9 +31,9 @@ gum style --foreground 4 "Etape 2 : Démarrage des containers"
 check_container_status() {
     container_name="$1"
     if docker ps | grep -q "$container_name"; then
-        echo "$container_name est démarré avec succès."
+        gum style --foreground $GREEN "$container_name est démarré avec succès."
     else
-        echo "Erreur: $container_name n'a pas démarré correctement!"
+        gum style --foreground $RED "Erreur: $container_name n'a pas démarré correctement!"
         exit 1
     fi
 }
@@ -84,9 +84,9 @@ fi
 for file in $docker_compose_dir/*-docker-compose.yml; do
     container_name=$(basename "$file" | sed -E 's/^(.*)-docker-compose\.yml/\1/')
     echo "Nom du conteneur : $container_name"
-    # gum spin --title.foreground $ORANGE --title="Démarrage du container $container_name" sudo docker-compose -f "$base_dir/$container_name-docker-compose.yml" up -d &> /dev/null
-    sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d
-    check_container_status
+    gum spin --title.foreground $ORANGE --title="Démarrage du container $container_name" sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d --remove-orphans &> /dev/null
+    
+    check_container_status $container_name
 done
 
 
