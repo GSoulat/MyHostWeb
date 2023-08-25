@@ -62,7 +62,8 @@ myhostweb_data() {
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
     if [ -d "MyHostWeb" ]; then
-        gum spin --title.foreground $ORANGE --title="Le répertoire MyHostWeb existe déjà. Création du dossier. Suppression en cours..." sudo mv MyHostWeb Backup &> /dev/null
+        gum spin --title.foreground $ORANGE --title="Le répertoire MyHostWeb existe déjà. Création du dossier. Suppression en cours..." sudo mv MyHostWeb Backup  &> /dev/null
+        sudo rm -rf MyHostWeb
     fi
 
     # 5. Clonage du projet GitHub
