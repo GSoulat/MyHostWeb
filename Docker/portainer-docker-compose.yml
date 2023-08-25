@@ -7,7 +7,7 @@ services:
       - "9443:9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - myhostweb_data/portainer/data:/data
+      - ./myhostweb_data:/data
     networks:
       - myhost_network
     restart: always
