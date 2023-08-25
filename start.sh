@@ -87,14 +87,14 @@ myhostweb_data() {
 
     # 8. Création du réseau Docker si ce n'est pas déjà fait
     if ! sudo docker network ls | grep -q 'myhost_network'; then
-        gum spin --title.foreground $ORANGE --title="Création du réseau Docker 'myhost_network'..." sudo docker network create myhost_network &> /dev/null
+        sudo docker network create myhost_network &> /dev/null
     else
         gum style --foreground $GREEN "Le réseau Docker 'myhost_network' existe déjà."
     fi
 
     volume_name="myhostweb_data"
     if ! docker volume ls -q | grep -q "^${volume_name}$"; then
-        gum spin --title.foreground $ORANGE --title="Création du volume myhostweb_data" docker volume create myhostweb_data &> /dev/null
+        docker volume create myhostweb_data &> /dev/null
         if docker volume ls -q | grep -q "^${volume_name}$"; then
             gum style --foreground $GREEN "Le volume myhostweb_data à été crée"
         fi
