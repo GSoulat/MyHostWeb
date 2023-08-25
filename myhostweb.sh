@@ -70,7 +70,7 @@ check_container_status() {
 #     fi
 # done
 
-docker system prune -a -f
+
 
 # Spécifiez le répertoire contenant les fichiers Docker Compose
 docker_compose_dir="./MyHostWeb/Docker"

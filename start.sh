@@ -81,8 +81,10 @@ myhostweb_data() {
     #7. Vérification de  l'installationd de docker compose
     if ! command -v docker-compose &> /dev/null; then
         gum spin --title.foreground $ORANGE --title="Docker Compose installation en cours..." sudo apt install -y docker-compose &> /dev/null
+        docker system prune -a -f
     else
         gum style --foreground $GREEN "Docker Compose est déjà installé."
+        docker system prune -a -f
     fi
 
     # 8. Création du réseau Docker si ce n'est pas déjà fait
