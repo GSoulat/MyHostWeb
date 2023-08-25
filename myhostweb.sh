@@ -83,7 +83,8 @@ fi
 # Liste les fichiers Docker Compose et extrait le nom du conteneur à partir du nom du fichier
 for file in $docker_compose_dir/*-docker-compose.yml; do
     container_name=$(basename "$file" | sed -E 's/^(.*)-docker-compose\.yml/\1/')
-    gum spin --title.foreground $ORANGE --title="Démarrage du container $container_name" sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d --remove-orphans
+    echo "Nom du conteneur : $container_name"
+    sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d --remove-orphans
     check_container_status $container_name
 done
 
