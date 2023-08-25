@@ -99,6 +99,9 @@ echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
 sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
 check_container_status "nginx" 
 
+sleep 60
+
+
 clear
 # Affichage du logo en bleu
 gum style \
