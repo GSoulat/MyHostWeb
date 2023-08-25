@@ -85,7 +85,7 @@ for file in $docker_compose_dir/*-docker-compose.yml; do
     container_name=$(basename "$file" | sed -E 's/^(.*)-docker-compose\.yml/\1/')
     echo "Nom du conteneur : $container_name"
     # gum spin --title.foreground $ORANGE --title="Démarrage du container $container_name" sudo docker-compose -f "$base_dir/$container_name-docker-compose.yml" up -d &> /dev/null
-    sudo docker-compose -f "$base_dir/$container_name-docker-compose.yml" up -d
+    sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d
     check_container_status
 done
 
