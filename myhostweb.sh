@@ -38,26 +38,26 @@ check_container_status() {
 }
 
 # Liste des sauvegardes disponibles
-backups=($(ls "$backup_path"/*.zip 2> /dev/null))
+# backups=($(ls "$backup_path"/*.zip 2> /dev/null))
 
-if [ ${#backups[@]} -gt 0 ]; then
-    echo "Sauvegardes disponibles:"
-    for i in "${!backups[@]}"; do
-        echo "$((i+1))) ${backups[$i]}"
-    done
+# if [ ${#backups[@]} -gt 0 ]; then
+#     echo "Sauvegardes disponibles:"
+#     for i in "${!backups[@]}"; do
+#         echo "$((i+1))) ${backups[$i]}"
+#     done
     
-    read -p "Entrez le numéro de la sauvegarde que vous souhaitez restaurer ou appuyez sur Enter pour continuer: " backup_choice
-    if [[ $backup_choice =~ ^[0-9]+$ ]] && [ "$backup_choice" -ge 1 ] && [ "$backup_choice" -le ${#backups[@]} ]; then
-        selected_backup="${backups[$((backup_choice-1))]}"
-        echo "Restauration de la sauvegarde $selected_backup ..."
-        # Ici, vous pouvez ajouter le code pour restaurer la sauvegarde si nécessaire
-    fi
-else
-    echo "Aucune sauvegarde disponible."
-fi
+#     read -p "Entrez le numéro de la sauvegarde que vous souhaitez restaurer ou appuyez sur Enter pour continuer: " backup_choice
+#     if [[ $backup_choice =~ ^[0-9]+$ ]] && [ "$backup_choice" -ge 1 ] && [ "$backup_choice" -le ${#backups[@]} ]; then
+#         selected_backup="${backups[$((backup_choice-1))]}"
+#         echo "Restauration de la sauvegarde $selected_backup ..."
+#         # Ici, vous pouvez ajouter le code pour restaurer la sauvegarde si nécessaire
+#     fi
+# else
+#     echo "Aucune sauvegarde disponible."
+# fi
 
 # Sauvegarde des volumes existants
-docker_containers=( "portainer" "nginx" "nginx-db" )
+docker_containers=( "portainer" "nginx" )
 current_time=$(date +"%Y%m%d_%H%M%S")
 for container in "${docker_containers[@]}"; do
     if docker ps -a | grep -q "$container"; then
