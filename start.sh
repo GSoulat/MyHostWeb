@@ -101,14 +101,13 @@ myhostweb_data() {
         gum style --foreground $GREEN "Le volume ${volume_name} exists."
     fi
 
-
     bash MyHostWeb/myhostweb.sh
     
 }
 
 bye_data() {
     echo "Bonne journée"
-    sleep 2
+    sleep 60
     clear
 }
 
