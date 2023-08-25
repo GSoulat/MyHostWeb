@@ -72,7 +72,7 @@ check_container_status() {
 #!/bin/bash
 
 # Spécifiez le répertoire contenant les fichiers Docker Compose
-docker_compose_dir="./Docker"
+docker_compose_dir="./MyHostWeb/Docker"
 pwd
 # Vérifiez si le répertoire existe
 if [ ! -d "$docker_compose_dir" ]; then
