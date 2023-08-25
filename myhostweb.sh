@@ -27,6 +27,7 @@ gum style \
 gum style --foreground 4 "Etape 2 : Démarrage des containers"
 
 
+
 check_container_status() {
     container_name="$1"
     if docker ps | grep -q "$container_name"; then
@@ -57,20 +58,40 @@ check_container_status() {
 # fi
 
 # Sauvegarde des volumes existants
-docker_containers=( "portainer" "nginx" )
-current_time=$(date +"%Y%m%d_%H%M%S")
-for container in "${docker_containers[@]}"; do
-    if docker ps -a | grep -q "$container"; then
-        volume_path=$(docker inspect "$container" | jq -r '.[0].Mounts[0].Source')
-        backup_filename="${container}_${current_time}.zip"
-        echo "Sauvegarde du volume pour $container..."
-        sudo zip -r "$backup_path/$backup_filename" "$volume_path"
-    fi
+# docker_containers=( "portainer" "nginx" )
+# current_time=$(date +"%Y%m%d_%H%M%S")
+# for container in "${docker_containers[@]}"; do
+#     if docker ps -a | grep -q "$container"; then
+#         backup_filename="${container}_${current_time}.zip"
+#         gum spin --title.foreground $ORANGE --title="Inspection des containers" volume_path=$(docker inspect "$container" | jq -r '.[0].Mounts[0].Source') &> /dev/null
+#         gum style --foreground $GREEN "Volume sauvegardé $container"
+#         sudo zip -r "$backup_path/$backup_filename" "$volume_path"
+#     fi
+# done
+
+#!/bin/bash
+
+# Spécifiez le répertoire contenant les fichiers Docker Compose
+docker_compose_dir="./Docker"
+
+# Vérifiez si le répertoire existe
+if [ ! -d "$docker_compose_dir" ]; then
+    echo "Le répertoire $docker_compose_dir n'existe pas."
+    exit 1
+fi
+
+# Liste les fichiers Docker Compose et extrait le nom du conteneur à partir du nom du fichier
+for file in $docker_compose_dir/*-docker-compose.yml; do
+    container_name=$(basename "$file" | sed -E 's/^(.*)-docker-compose\.yml/\1/')
+    echo "Nom du conteneur : $container_name"
+    gum spin --title.foreground $ORANGE --title="Démarrage du container $container_name" sudo docker-compose -f "$base_dir/Docker/$container_name-docker-compose.yml" up -d &> /dev/null
+    check_container_status
 done
 
+
 # Démarrage de Portainer avec Docker Compose
-echo "Démarrage de Portainer avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/portainer-docker-compose.yml" up -d
+
+
 check_container_status "portainer" 
 
 # Démarrage de Nginx Proxy Manager avec Docker Compose
@@ -78,22 +99,23 @@ echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
 sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
 check_container_status "nginx" 
 
-
+clear
 # Affichage du logo en bleu
-echo -e "\e[34m"
-echo "    __  __       _    _           ___          __  _      "  
-echo "   |  \/  |     | |  | |         | \ \        / / | |     "
-echo "   | \  / |_   _| |__| | ___  ___| |\ \  /\  / /__| |__   "
-echo "   | |\/| | | | |  __  |/ _ \/ __| __\ \/  \/ / _ \ '_ \  "
-echo "   | |  | | |_| | |  | | (_) \__ \ |_ \  /\  /  __/ |_) | "
-echo "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "
-echo "            __/ |                                         "
-echo "           |___/                                          "
-echo -e "\e[0m"
+gum style \
+	--foreground 2 --border-foreground 11 --border double \
+	--margin "1 2" --padding "2 4" \
+	"    __  __       _    _           ___          __  _      "  \
+    "   |  \/  |     | |  | |         | \ \        / / | |     "  \
+    "   | \  / |_   _| |__| | ___  ___| |\ \  /\  / /__| |__   "  \
+    "   | |\/| | | | |  __  |/ _ \/ __| __\ \/  \/ / _ \ '_ \  "  \
+    "   | |  | | |_| | |  | | (_) \__ \ |_ \  /\  /  __/ |_) | "  \
+    "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "  \
+    "            __/ |                                         "  \
+    "           |___/                                          "  \
 
 # Récupération de l'IP de la machine
 ip_address=$(hostname -I | awk '{print $1}')
 
 # Affichage des liens pour se connecter à nginx et portainer
-echo "Lien pour se connecter à nginx: http://${ip_address}:81"
-echo "Lien pour se connecter à portainer: https://${ip_address}:9443"
+echo "Nginx: http://${ip_address}:81"
+echo "Portainer: https://${ip_address}:9443"

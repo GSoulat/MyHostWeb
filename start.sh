@@ -91,6 +91,17 @@ myhostweb_data() {
         gum style --foreground $GREEN "Le réseau Docker 'myhost_network' existe déjà."
     fi
 
+    volume_name="myhostweb_data"
+    if ! docker volume ls -q | grep -q "^${volume_name}$"; then
+        gum spin --title.foreground $ORANGE --title="Création du volume myhostweb_data" docker volume create myhostweb_data &> /dev/null
+        if docker volume ls -q | grep -q "^${volume_name}$"; then
+            gum style --foreground $GREEN "Le volume myhostweb_data à été crée"
+        fi
+    else
+        gum style --foreground $GREEN "Le volume ${volume_name} exists."
+    fi
+
+
     bash MyHostWeb/myhostweb.sh
     
 }
@@ -102,11 +113,3 @@ bye_data() {
 }
 
 gum confirm 'Voulez vous installer MyhostWeb ?' && myhostweb_data  --affirmative="Oui" --negative="Non" || bye_data
-
-
-
-
-
-# # 8. Exécution du script myhostweb.sh pour démarrer les services Docker Compose
-# echo "Démarrage des services avec myhostweb.sh..."
-# bash MyHostWeb/myhostweb.sh "$domain_name"
