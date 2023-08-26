@@ -7,7 +7,7 @@
 sudo mkdir -p /etc/apt/keyrings
 
 # Télécharge et installe la clé GPG, en écrasant le fichier existant sans poser de questions
-curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg -y
 
 # Ajoute le dépôt, en écrasant le fichier existant sans poser de questions
 echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list > /dev/null
@@ -16,16 +16,13 @@ echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *
 sudo apt update -y && sudo apt install gum -y
 
 
-# Effacer le terminal
-
-
 TIME=2
 RED=1
 GREEN=10
 ORANGE=3
 
-header() {
-    gum style \
+
+gum style \
         --foreground 2 --border-foreground 11 --border double \
         --margin "1 2" --padding "2 4" \
         "    __  __       _    _           ___          __  _      "  \
@@ -36,13 +33,11 @@ header() {
         "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "  \
         "            __/ |                                         "  \
         "           |___/                                          "  \
-}
+
 
 
 
 myhostweb_data() {
-
-    header
     gum style --foreground 4 "Etape 1 : Mise à jour et installation"
 
     # 1. Mise à jour d'Ubuntu
