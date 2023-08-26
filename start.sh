@@ -57,6 +57,10 @@ myhostweb_data() {
     echo "Installation des dépendances..."
     sudo apt install -y software-properties-common
 
+    # 5. Clonage du projet GitHub
+    gum spin --title.foreground $ORANGE --title="Clonage du repository Github MyHostWeb..." sudo apt install git && git clone https://github.com/GSoulat/MyHostWeb.git
+    sleep 5
+
     clear
     header
 
