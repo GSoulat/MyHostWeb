@@ -6,8 +6,11 @@
 # Installation de Gum (seulement si le fichier charm.gpg n'existe pas)
 if [ ! -f "/etc/apt/keyrings/charm.gpg" ]; then
     sudo mkdir -p /etc/apt/keyrings
+    wait $!
     curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg >> /dev/null
+    wait $!
     echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list 
+    wait $!
     sudo apt update &> /dev/null && sudo apt install gum &> /dev/null
 else
     echo "Charm GPG key already exists."
@@ -35,17 +38,19 @@ gum style \
 
 myhostweb_data() {
     gum style --foreground 4 "Etape 1 : Mise à jour et installation"
+    wait $!
 
     # 1. Mise à jour d'Ubuntu
-    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sleep $TIME sudo apt update && sudo apt upgrade -y &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade -y && echo "Update is OK" &> /dev/null
+    wait $!
     gum style --foreground $GREEN "Mise à jour effectué"
 
     # 2. Installation de Git
     if ! command -v git &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de Git..." sleep $TIME sudo apt install -y git &> /dev/null
-        sleep $TIME
+        gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git -y  && echo "Git is OK"  &> /dev/null
+        wait git
         if ! command -v git &> /dev/null; then
-           sleep $TIME 
+           wait git
         else
             gum style --foreground $GREEN "Git est installé"
         fi
@@ -55,9 +60,15 @@ myhostweb_data() {
 
     # 3. Installation de Zip
     if ! command -v zip &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install -y zip &> /dev/null
+        gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip -y && echo "Zip is OK"  &> /dev/null
+        wait zip
+        if ! command -v zip &> /dev/null; then
+           wait zip
+        else
+            gum style --foreground $GREEN "Zip est installé"
+        fi
     else
-        gum style --foreground $GREEN  "Zip est déjà installé."
+        gum style --foreground $GREEN "Zip est déjà installé."
     fi
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
@@ -71,9 +82,11 @@ myhostweb_data() {
     
     # 6. Vérification de l'installation de Docker et Docker Compose
     if ! command -v docker &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de docker..." sudo apt install -y docker.io &> /dev/null
+        gum spin --title.foreground $ORANGE --title="Installation de docker..." sudo apt install docker.io -y && wait docker && echo "Docker is OK"  &> /dev/null
         gum spin --title.foreground $ORANGE --title="Démarrage de docker..." sudo systemctl start docker &> /dev/null
+        wait $!
         gum spin --title.foreground $ORANGE --title="Enable docker..." sudo systemctl enable docker &> /dev/null
+        wait $!
     else
         gum style --foreground $GREEN "Docker est déjà installé."
     fi
@@ -81,15 +94,19 @@ myhostweb_data() {
     #7. Vérification de  l'installationd de docker compose
     if ! command -v docker-compose &> /dev/null; then
         gum spin --title.foreground $ORANGE --title="Docker Compose installation en cours..." sudo apt install -y docker-compose &> /dev/null
+        wait $!
         docker system prune -a -f
+        wait $!
     else
         gum style --foreground $GREEN "Docker Compose est déjà installé."
         docker system prune -a -f
+        wait $!
     fi
 
     # 8. Création du réseau Docker si ce n'est pas déjà fait
     if ! sudo docker network ls | grep -q 'myhost_network'; then
         sudo docker network create myhost_network &> /dev/null
+        wait $!
     else
         gum style --foreground $GREEN "Le réseau Docker 'myhost_network' existe déjà."
     fi
@@ -97,6 +114,7 @@ myhostweb_data() {
     volume_name="myhostweb_data"
     if ! docker volume ls -q | grep -q "^${volume_name}$"; then
         docker volume create myhostweb_data &> /dev/null
+        wait $!
         if docker volume ls -q | grep -q "^${volume_name}$"; then
             gum style --foreground $GREEN "Le volume myhostweb_data à été crée"
         fi
@@ -104,7 +122,7 @@ myhostweb_data() {
         gum style --foreground $GREEN "Le volume ${volume_name} exists."
     fi
 
-    bash MyHostWeb/myhostweb.sh
+    # bash MyHostWeb/myhostweb.sh
     
 }
 
