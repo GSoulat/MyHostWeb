@@ -6,12 +6,9 @@
 # Installation de Gum (seulement si le fichier charm.gpg n'existe pas)
 
 sudo mkdir -p /etc/apt/keyrings
-wait $!
 curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg >> /dev/null
-wait $!
 echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list 
-wait $!
-sudo apt update && sudo apt install gum -y
+sudo apt update && sudo apt install gum
 
 
 # Effacer le terminal
