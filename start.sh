@@ -24,6 +24,7 @@ RED=1
 GREEN=10
 ORANGE=3
 
+() {
 gum style \
 	--foreground 2 --border-foreground 11 --border double \
 	--margin "1 2" --padding "2 4" \
@@ -35,6 +36,9 @@ gum style \
     "   |_|  |_|\__, |_|  |_|\___/|___/\__| \/  \/ \___|_.__/  "  \
     "            __/ |                                         "  \
     "           |___/                                          "  \
+}
+
+
 
 myhostweb_data() {
     gum style --foreground 4 "Etape 1 : Mise à jour et installation"
@@ -53,6 +57,9 @@ myhostweb_data() {
     echo "Installation des dépendances..."
     sudo apt install -y software-properties-common
 
+    clear
+    header
+
     # Ajouter le PPA Ansible et installer Ansible
     echo "Installation d'Ansible..."
     sudo apt-add-repository --yes --update ppa:ansible/ansible
@@ -63,7 +70,7 @@ myhostweb_data() {
 
     # Exécuter le playbook Ansible
     echo "Exécution du playbook..."
-    ansible-playbook -i "localhost," -c local /MyHostWeb/myhostweb.yml
+    ansible-playbook -i "localhost," -c local ./MyHostWeb/myhostweb.yml
 
     echo "Terminé."
 
@@ -78,4 +85,5 @@ bye_data() {
     clear
 }
 
+header
 gum confirm 'Voulez vous installer MyhostWeb ?' && myhostweb_data  --affirmative="Oui" --negative="Non" || bye_data
