@@ -14,11 +14,6 @@
         name: zip
         state: present
 
-    - name: Vérifier et supprimer le répertoire MyHostWeb si nécessaire
-      ansible.builtin.command:
-        cmd: rm -rf MyHostWeb
-        removes: MyHostWeb
-
     - name: Cloner le projet GitHub MyHostWeb
       ansible.builtin.git:
         repo: https://github.com/GSoulat/MyHostWeb.git
