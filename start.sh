@@ -3,12 +3,17 @@
 # echo "Installation de Gum"
 # Debian/Ubuntu
 
-# Installation de Gum (seulement si le fichier charm.gpg n'existe pas)
-
+# Crée le répertoire s'il n'existe pas
 sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg >> /dev/null
-echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list 
-sudo apt update && sudo apt install gum
+
+# Télécharge et installe la clé GPG, en écrasant le fichier existant sans poser de questions
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+
+# Ajoute le dépôt, en écrasant le fichier existant sans poser de questions
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list > /dev/null
+
+# Met à jour et installe le package
+sudo apt update -y && sudo apt install gum -y
 
 
 # Effacer le terminal
@@ -36,17 +41,15 @@ myhostweb_data() {
     sleep 5
 
     # 1. Mise à jour d'Ubuntu
-    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade
+    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade && gum style --foreground $GREEN "Mise à jour effectué"
     sleep 5
-    gum style --foreground $GREEN "Mise à jour effectué"
-
+    
     # 2. Installation de Git
-    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git
+    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git && gum style --foreground $GREEN "Git est Ready"
     sleep 5
-
 
     # 3. Installation de Zip
-    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip
+    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip && gum style --foreground $GREEN "Zip est Ready"
     sleep 5
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
