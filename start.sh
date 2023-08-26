@@ -24,7 +24,7 @@ RED=1
 GREEN=10
 ORANGE=3
 
-() {
+header() {
 gum style \
 	--foreground 2 --border-foreground 11 --border double \
 	--margin "1 2" --padding "2 4" \
