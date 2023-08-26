@@ -84,24 +84,10 @@ fi
 # Liste les fichiers Docker Compose et extrait le nom du conteneur à partir du nom du fichier
 for file in $docker_compose_dir/*-docker-compose.yml; do
     container_name=$(basename "$file" | sed -E 's/^(.*)-docker-compose\.yml/\1/')
-    echo "Nom du conteneur : $container_name"
-    sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d
+    sudo docker-compose -f "$docker_compose_dir/$container_name-docker-compose.yml" up -d  && echo "Nom du conteneur : $container_name"
     check_container_status $container_name
+    sleep 3
 done
-
-
-# Démarrage de Portainer avec Docker Compose
-
-
-check_container_status "portainer" 
-
-# Démarrage de Nginx Proxy Manager avec Docker Compose
-echo "Démarrage de Nginx Proxy Manager avec Docker Compose..."
-sudo docker-compose -f "$base_dir/Docker/nginx-docker-compose.yml" up -d
-check_container_status "nginx" 
-
-sleep 60
-
 
 clear
 # Affichage du logo en bleu
