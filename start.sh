@@ -59,7 +59,7 @@ myhostweb_data() {
 
     # Exécuter le playbook Ansible
     echo "Exécution du playbook..."
-    ansible-playbook -i "localhost," -c local myhostweb.yml
+    ansible-playbook -i "localhost," -c local ./MyHostWeb/myhostweb.yml
 
     echo "Terminé."
 
