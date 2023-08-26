@@ -16,6 +16,7 @@ echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *
 # Met à jour et installe le package
 sudo apt update -y && sudo apt install gum -y
 
+clear
 
 TIME=2
 RED=1
@@ -87,5 +88,5 @@ bye_data() {
     clear
 }
 
-clear
+
 gum confirm 'Voulez vous installer MyhostWeb ?' && myhostweb_data  --affirmative="Oui" --negative="Non" || bye_data

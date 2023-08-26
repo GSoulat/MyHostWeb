@@ -1,6 +1,6 @@
 ---
 - name: Installer et configurer MyHostWeb
-  hosts: votre_hôte_cible
+  hosts: localhost
   become: yes  # Pour devenir sudo
 
   tasks:
