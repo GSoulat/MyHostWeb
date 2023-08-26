@@ -43,7 +43,11 @@ myhostweb_data() {
     gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade && gum style --foreground $GREEN "Mise à jour effectué"
     sleep 5
     
-    # Mettre à jour les packages du système
+    # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
+    if [ -d "MyHostWeb" ]; then
+        gum spin --title.foreground $ORANGE --title="Répertoire MyHostWeb" sudo mv MyHostWeb Backup
+        sudo rm -rf MyHostWeb
+    fi
 
     # Installer les dépendances
     echo "Installation des dépendances..."
@@ -59,7 +63,7 @@ myhostweb_data() {
 
     # Exécuter le playbook Ansible
     echo "Exécution du playbook..."
-    ansible-playbook -i "localhost," -c local ./MyHostWeb/myhostweb.yml
+    ansible-playbook -i "localhost," -c local /MyHostWeb/myhostweb.yml
 
     echo "Terminé."
 
