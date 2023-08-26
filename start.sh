@@ -2,6 +2,7 @@
 
 # echo "Installation de Gum"
 # Debian/Ubuntu
+set -x
 
 # Crée le répertoire s'il n'existe pas
 sudo mkdir -p /etc/apt/keyrings
