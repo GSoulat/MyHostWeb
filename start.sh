@@ -2,7 +2,7 @@
 
 # echo "Installation de Gum"
 # Debian/Ubuntu
-set -x
+# set -x
 
 # Crée le répertoire s'il n'existe pas
 sudo mkdir -p /etc/apt/keyrings
@@ -75,10 +75,10 @@ myhostweb_data() {
     echo "Exécution du playbook..."
     ansible-playbook -i "localhost," -c local ./MyHostWeb/myhostweb.yml
 
-    echo "Terminé."
+    # echo "Terminé."
 
 
-    # bash MyHostWeb/myhostweb.sh
+    bash MyHostWeb/myhostweb.sh
     
 }
 

@@ -4,20 +4,10 @@
   become: yes  # Pour devenir sudo
 
   tasks:
-    - name: Installer Git
-      ansible.builtin.apt:
-        name: git
-        state: present
-
     - name: Installer Zip
       ansible.builtin.apt:
         name: zip
         state: present
-
-    - name: Cloner le projet GitHub MyHostWeb
-      ansible.builtin.git:
-        repo: https://github.com/GSoulat/MyHostWeb.git
-        dest: MyHostWeb
 
     - name: Installer Docker
       ansible.builtin.apt:
