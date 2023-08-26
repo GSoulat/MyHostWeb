@@ -41,6 +41,8 @@ header() {
 
 
 myhostweb_data() {
+
+    header
     gum style --foreground 4 "Etape 1 : Mise à jour et installation"
 
     # 1. Mise à jour d'Ubuntu
@@ -90,5 +92,4 @@ bye_data() {
 }
 
 clear
-header
 gum confirm 'Voulez vous installer MyhostWeb ?' && myhostweb_data  --affirmative="Oui" --negative="Non" || bye_data
