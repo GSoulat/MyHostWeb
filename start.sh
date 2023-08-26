@@ -17,7 +17,7 @@ sudo apt update -y && sudo apt install gum -y
 
 
 # Effacer le terminal
-clear
+
 
 TIME=2
 RED=1
@@ -89,5 +89,6 @@ bye_data() {
     clear
 }
 
+clear
 header
 gum confirm 'Voulez vous installer MyhostWeb ?' && myhostweb_data  --affirmative="Oui" --negative="Non" || bye_data
