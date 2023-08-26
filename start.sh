@@ -46,30 +46,13 @@ myhostweb_data() {
     gum style --foreground $GREEN "Mise à jour effectué"
 
     # 2. Installation de Git
-    if ! command -v git &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git -y  && echo "Git is OK"  &> /dev/null
-        wait git
-        if ! command -v git &> /dev/null; then
-           wait git
-        else
-            gum style --foreground $GREEN "Git est installé"
-        fi
-    else
-        gum style --foreground $GREEN "Git est déjà installé."
-    fi
+    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git -y  && echo "Git is OK"  &> /dev/null
+    wait git
+
 
     # 3. Installation de Zip
-    if ! command -v zip &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip -y && echo "Zip is OK"  &> /dev/null
-        wait zip
-        if ! command -v zip &> /dev/null; then
-           wait zip
-        else
-            gum style --foreground $GREEN "Zip est installé"
-        fi
-    else
-        gum style --foreground $GREEN "Zip est déjà installé."
-    fi
+    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip -y && echo "Zip is OK"  &> /dev/null
+    wait zip
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
     if [ -d "MyHostWeb" ]; then
@@ -79,37 +62,27 @@ myhostweb_data() {
 
     # 5. Clonage du projet GitHub
     gum spin --title.foreground $ORANGE --title="Clonage du repository Github MyHostWeb..." git clone https://github.com/GSoulat/MyHostWeb.git &> /dev/null
-    
+    sleep 5
+
     # 6. Vérification de l'installation de Docker et Docker Compose
-    if ! command -v docker &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Installation de docker..." sudo apt install docker.io -y && wait docker && echo "Docker is OK"  &> /dev/null
-        gum spin --title.foreground $ORANGE --title="Démarrage de docker..." sudo systemctl start docker &> /dev/null
-        wait $!
-        gum spin --title.foreground $ORANGE --title="Enable docker..." sudo systemctl enable docker &> /dev/null
-        wait $!
-    else
-        gum style --foreground $GREEN "Docker est déjà installé."
-    fi
+    gum spin --title.foreground $ORANGE --title="Installation de docker..." sudo apt install docker.io -y && wait docker && echo "Docker is OK"  &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Démarrage de docker..." sudo systemctl start docker &> /dev/null
+    wait $!
+    gum spin --title.foreground $ORANGE --title="Enable docker..." sudo systemctl enable docker &> /dev/null
+    wait $!
+
     
     #7. Vérification de  l'installationd de docker compose
-    if ! command -v docker-compose &> /dev/null; then
-        gum spin --title.foreground $ORANGE --title="Docker Compose installation en cours..." sudo apt install -y docker-compose &> /dev/null
-        wait $!
-        docker system prune -a -f
-        wait $!
-    else
-        gum style --foreground $GREEN "Docker Compose est déjà installé."
-        docker system prune -a -f
-        wait $!
-    fi
+
+    gum spin --title.foreground $ORANGE --title="Docker Compose installation en cours..." sudo apt install -y docker-compose &> /dev/null
+    wait $!
+    docker system prune -a -f
+    wait $!
 
     # 8. Création du réseau Docker si ce n'est pas déjà fait
-    if ! sudo docker network ls | grep -q 'myhost_network'; then
-        sudo docker network create myhost_network &> /dev/null
-        wait $!
-    else
-        gum style --foreground $GREEN "Le réseau Docker 'myhost_network' existe déjà."
-    fi
+    sudo docker network create myhost_network &> /dev/null
+    wait $!
+
 
     volume_name="myhostweb_data"
     if ! docker volume ls -q | grep -q "^${volume_name}$"; then
