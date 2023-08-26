@@ -4,17 +4,15 @@
 # Debian/Ubuntu
 
 # Installation de Gum (seulement si le fichier charm.gpg n'existe pas)
-if [ ! -f "/etc/apt/keyrings/charm.gpg" ]; then
-    sudo mkdir -p /etc/apt/keyrings
-    wait $!
-    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg >> /dev/null
-    wait $!
-    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list 
-    wait $!
-    sudo apt update &> /dev/null && sudo apt install gum &> /dev/null
-else
-    echo "Charm GPG key already exists."
-fi
+
+sudo mkdir -p /etc/apt/keyrings
+wait $!
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg >> /dev/null
+wait $!
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list 
+wait $!
+sudo apt update && sudo apt install gum -y
+
 
 # Effacer le terminal
 clear
