@@ -41,12 +41,12 @@ myhostweb_data() {
     gum style --foreground $GREEN "Mise à jour effectué"
 
     # 2. Installation de Git
-    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git -y  && echo "Git is OK"  &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install -y git  && echo "Git is OK"  &> /dev/null
     wait git
 
 
     # 3. Installation de Zip
-    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip -y && echo "Zip is OK"  &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install -y zip && echo "Zip is OK"  &> /dev/null
     wait zip
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
