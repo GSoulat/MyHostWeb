@@ -38,60 +38,31 @@ gum style \
 
 myhostweb_data() {
     gum style --foreground 4 "Etape 1 : Mise à jour et installation"
-    sleep 5
 
     # 1. Mise à jour d'Ubuntu
     gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade && gum style --foreground $GREEN "Mise à jour effectué"
     sleep 5
     
-    # 2. Installation de Git
-    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git && gum style --foreground $GREEN "Git est Ready"
-    sleep 5
+    # Mettre à jour les packages du système
 
-    # 3. Installation de Zip
-    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip && gum style --foreground $GREEN "Zip est Ready"
-    sleep 5
+    # Installer les dépendances
+    echo "Installation des dépendances..."
+    sudo apt install -y software-properties-common
 
-    # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
-    if [ -d "MyHostWeb" ]; then
-        gum spin --title.foreground $ORANGE --title="Répertoire MyHostWeb" sudo mv MyHostWeb Backup
-        sudo rm -rf MyHostWeb
-    fi
-    sleep 5
-    # 5. Clonage du projet GitHub
-    gum spin --title.foreground $ORANGE --title="Clonage du repository Github MyHostWeb..." git clone https://github.com/GSoulat/MyHostWeb.git
-    sleep 5
+    # Ajouter le PPA Ansible et installer Ansible
+    echo "Installation d'Ansible..."
+    sudo apt-add-repository --yes --update ppa:ansible/ansible
+    sudo apt install -y ansible
 
-    # 6. Vérification de l'installation de Docker et Docker Compose
-    gum spin --title.foreground $ORANGE --title="Installation de docker..." sudo apt install docker.io
-    gum spin --title.foreground $ORANGE --title="Démarrage de docker..." sudo systemctl start docker
-    sleep 5
-    gum spin --title.foreground $ORANGE --title="Enable docker..." sudo systemctl enable docker
-    sleep 5
+    # Placer le playbook dans le répertoire courant (ou téléchargez-le depuis une source)
+    # Le playbook doit être nommé 'myhostweb.yml'
 
-    
-    #7. Vérification de  l'installationd de docker compose
+    # Exécuter le playbook Ansible
+    echo "Exécution du playbook..."
+    ansible-playbook -i "localhost," -c local myhostweb.yml
 
-    gum spin --title.foreground $ORANGE --title="Docker Compose installation en cours..." sudo apt install docker-compose
-    sleep 5
-    docker system prune -a -f
-    sleep 5
+    echo "Terminé."
 
-    # 8. Création du réseau Docker si ce n'est pas déjà fait
-    sudo docker network create myhost_network
-    sleep 5
-
-
-    volume_name="myhostweb_data"
-    if ! docker volume ls -q | grep -q "^${volume_name}$"; then
-        docker volume create myhostweb_data
-        sleep 5
-        if docker volume ls -q | grep -q "^${volume_name}$"; then
-            gum style --foreground $GREEN "Le volume myhostweb_data à été crée"
-        fi
-    else
-        gum style --foreground $GREEN "Le volume ${volume_name} exists."
-    fi
 
     # bash MyHostWeb/myhostweb.sh
     

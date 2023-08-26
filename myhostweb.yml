@@ -1,0 +1,55 @@
+---
+- name: Installer et configurer MyHostWeb
+  hosts: votre_hôte_cible
+  become: yes  # Pour devenir sudo
+
+  tasks:
+    - name: Installer Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+
+    - name: Installer Zip
+      ansible.builtin.apt:
+        name: zip
+        state: present
+
+    - name: Vérifier et supprimer le répertoire MyHostWeb si nécessaire
+      ansible.builtin.command:
+        cmd: rm -rf MyHostWeb
+        removes: MyHostWeb
+
+    - name: Cloner le projet GitHub MyHostWeb
+      ansible.builtin.git:
+        repo: https://github.com/GSoulat/MyHostWeb.git
+        dest: MyHostWeb
+
+    - name: Installer Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+
+    - name: Démarrer le service Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+    - name: Activer le service Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: yes
+
+    - name: Installer Docker Compose
+      ansible.builtin.apt:
+        name: docker-compose
+        state: present
+
+    - name: Créer le réseau Docker
+      ansible.builtin.docker_network:
+        name: myhost_network
+        state: present
+
+    - name: Créer le volume Docker
+      ansible.builtin.docker_volume:
+        name: myhostweb_data
+        state: present
