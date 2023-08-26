@@ -36,17 +36,17 @@ myhostweb_data() {
     wait $!
 
     # 1. Mise à jour d'Ubuntu
-    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade -y && echo "Update is OK" &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade && echo "Update is OK" &> /dev/null
     wait $!
     gum style --foreground $GREEN "Mise à jour effectué"
 
     # 2. Installation de Git
-    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install -y git  && echo "Git is OK"  &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Installation de Git..." sudo apt install git  && echo "Git is OK"  &> /dev/null
     wait git
 
 
     # 3. Installation de Zip
-    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install -y zip && echo "Zip is OK"  &> /dev/null
+    gum spin --title.foreground $ORANGE --title="Installation de Zip..." sudo apt install zip && echo "Zip is OK"  &> /dev/null
     wait zip
 
     # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
