@@ -9,13 +9,13 @@ sudo mkdir -p /etc/apt/keyrings
 
 # Télécharge et installe la clé GPG, en écrasant le fichier existant sans poser de questions
 curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg -y
-
+sleep 2
 # Ajoute le dépôt, en écrasant le fichier existant sans poser de questions
 echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list > /dev/null
-
+sleep 2
 # Met à jour et installe le package
 sudo apt update -y && sudo apt install gum -y
-
+sleep 2
 clear
 
 TIME=2
