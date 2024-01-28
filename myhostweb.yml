@@ -3,6 +3,11 @@
   become: yes  # Pour devenir sudo
 
   tasks:
+    - name: Mise à jour des packages
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: yes
+        
     - name: Installer Zip
       ansible.builtin.apt:
         name: zip
