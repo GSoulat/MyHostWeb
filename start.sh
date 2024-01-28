@@ -39,13 +39,8 @@ gum style \
 
 
 myhostweb_data() {
-    gum style --foreground 4 "Etape 1 : Mise à jour et installation"
-
-    # 1. Mise à jour d'Ubuntu
-    gum spin --title.foreground $ORANGE --title="Mise à jour de linux..." sudo apt update && sudo apt upgrade && gum style --foreground $GREEN "Mise à jour effectué"
-    sleep 5
-    
-    # 4. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
+  
+    # 1. Vérification de l'existence du répertoire MyHostWeb et suppression si nécessaire
     if [ -d "MyHostWeb" ]; then
         gum spin --title.foreground $ORANGE --title="Répertoire MyHostWeb" sudo mv MyHostWeb Backup
         sudo rm -rf MyHostWeb
@@ -55,7 +50,7 @@ myhostweb_data() {
     echo "Installation des dépendances..."
     sudo apt install -y software-properties-common
 
-    # 5. Clonage du projet GitHub
+    # 2. Clonage du projet GitHub
     gum spin --title.foreground $ORANGE --title="Clonage du repository Github MyHostWeb..." sudo apt install git && git clone https://github.com/GSoulat/MyHostWeb.git
     sleep 5
 
@@ -72,9 +67,6 @@ myhostweb_data() {
     # Exécuter le playbook Ansible
     echo "Exécution du playbook..."
     ansible-playbook -i "localhost," -c local ./MyHostWeb/myhostweb.yml
-
-    # echo "Terminé."
-
 
     bash MyHostWeb/myhostweb.sh
     
