@@ -1,5 +1,4 @@
----
-- name: Installer et configurer MyHostWeb
+- name: Installer et configurer MyHostWeb avec Fail2Ban
   hosts: localhost
   become: yes  # Pour devenir sudo
 
@@ -38,3 +37,37 @@
       ansible.builtin.docker_volume:
         name: myhostweb_data
         state: present
+
+    - name: Installer Fail2Ban
+      ansible.builtin.apt:
+        name: fail2ban
+        state: present
+
+    - name: Copier la configuration de Fail2Ban
+      ansible.builtin.copy:
+        src: /etc/fail2ban/jail.conf
+        dest: /etc/fail2ban/jail.local
+        mode: '0644'
+
+    - name: Configurer Fail2Ban avec maxretry = 5, bantime = 10h, findtime = 10m
+      ansible.builtin.lineinfile:
+        path: /etc/fail2ban/jail.local
+        line: |
+          [DEFAULT]
+          maxretry = 5
+          bantime = 10h
+          findtime = 10m
+      notify: Restart Fail2Ban
+
+    - name: Démarrer le service Fail2Ban
+      ansible.builtin.service:
+        name: fail2ban
+        state: started
+        enabled: yes
+
+  # Handler pour redémarrer Fail2Ban après la modification de la configuration
+  handlers:
+    - name: Restart Fail2Ban
+      ansible.builtin.service:
+        name: fail2ban
+        state: restarted
