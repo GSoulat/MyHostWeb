@@ -108,4 +108,14 @@ ip_address=$(hostname -I | awk '{print $1}')
 
 # Affichage des liens pour se connecter à nginx et portainer
 echo "Nginx: http://${ip_address}:81"
+echo ""
+echo "Login : admin@example.com"
+echo "Password : changeme"
+echo ""
+echo "docker name for nginx : nginx"
+echo "port : 81"
+echo ""
+echo "docker name for portainer : portainer"
+echo "port : 9000"
+echo ""
 echo "Portainer: https://${ip_address}:9443"
