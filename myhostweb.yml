@@ -14,6 +14,22 @@
         state: present
         update_cache: yes
 
+    - name: Get the Zsh path
+      command: which zsh
+      register: zsh_path
+
+    - name: Change the default shell to Zsh
+      command: chsh -s {{ zsh_path.stdout }}
+      when: zsh_path.stdout != ""
+
+    - name: Ensure the shell change took effect
+      command: echo $SHELL
+      register: new_shell
+      changed_when: false
+
+    - debug:
+        msg: "The new default shell is now {{ new_shell.stdout }}"
+
     - name: Install Git
       apt:
         name: git
@@ -60,7 +76,7 @@
         regexp: '^plugins=.*'
         line: 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)'
         state: present
-        
+
     - name: Installer Zip
       ansible.builtin.apt:
         name: zip
