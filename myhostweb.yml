@@ -7,6 +7,59 @@
       ansible.builtin.apt:
         update_cache: yes
         upgrade: yes
+    
+    - name: Install Zsh
+      apt:
+        name: zsh
+        state: present
+        update_cache: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
+
+    - name: Install Oh My Zsh
+      shell: zsh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      args:
+        creates: ~/.oh-my-zsh
+        executable: /bin/zsh
+
+    - name: Clone Powerlevel10k theme
+      git:
+        repo: 'https://github.com/romkatv/powerlevel10k.git'
+        dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+        version: master
+      register: p10k
+
+    - name: Add Powerlevel10k theme to .zshrc
+      lineinfile:
+        path: ~/.zshrc
+        regexp: '^ZSH_THEME=.*'
+        line: 'ZSH_THEME="powerlevel10k/powerlevel10k"'
+        state: present
+
+    - name: Install zsh-autosuggestions
+      git:
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+    - name: Install zsh-syntax-highlighting
+      git:
+        repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+    - name: Add plugins to .zshrc
+      lineinfile:
+        path: ~/.zshrc
+        regexp: '^plugins=.*'
+        line: 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)'
+        state: present
         
     - name: Installer Zip
       ansible.builtin.apt:
