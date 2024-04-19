@@ -17,18 +17,21 @@
     - name: Get the Zsh path
       command: which zsh
       register: zsh_path
+      changed_when: false
 
-    - name: Change the default shell to Zsh
+    - name: Change the default shell to Zsh for the current user
       command: chsh -s {{ zsh_path.stdout }}
       when: zsh_path.stdout != ""
+      become_user: "{{ ansible_env.USER }}"
 
-    - name: Ensure the shell change took effect
+    - name: Verify the shell change
+      become: no
       command: echo $SHELL
-      register: new_shell
+      register: shell_after
       changed_when: false
 
     - debug:
-        msg: "The new default shell is now {{ new_shell.stdout }}"
+        msg: "The shell before change was {{ ansible_env.SHELL }} and after change is {{ shell_after.stdout }}"
 
     - name: Install Git
       apt:
